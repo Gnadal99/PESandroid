@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Usuario/Documents/UNI/2021 - 22 Q1/PES/Semana 8/PESandroid/app/src/main/res/layout/activity_main.xml" value="0.12771739130434784" />
+        <entry key="..\:/Users/Usuario/Documents/UNI/2021 - 22 Q1/PES/Semana 8/PESandroid/app/src/main/res/layout/activity_inbox.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Usuario/Documents/UNI/2021 - 22 Q1/PES/Semana 8/PESandroid/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/Users/Usuario/Documents/UNI/2021 - 22 Q1/PES/Semana 8/PESandroid/app/src/main/res/layout/activity_register.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>

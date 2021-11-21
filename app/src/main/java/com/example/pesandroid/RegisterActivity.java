@@ -15,18 +15,18 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    MainActivity activity;
+    RegisterActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
         this.activity = this;
     }
 
-    public void login(View view) {
+    public void register(View view) {
         new Thread(new Runnable() {
 
             InputStream stream = null;
@@ -34,14 +34,13 @@ public class MainActivity extends AppCompatActivity {
             Handler handler = new Handler();
             public void run() {
                 try {
-                    //Obtain data
-                    EditText mailIn = findViewById(R.id.editTextEmailAddress);
+                    EditText mailIn = findViewById(R.id.registerEditTextEmailAddress);
                     String mail = mailIn.getText().toString();
-                    EditText passwordIn = findViewById(R.id.editTextPassword);
+                    EditText passwordIn = findViewById(R.id.registerEditTextPassword);
                     String password = passwordIn.getText().toString();
-
-                    //Query
-                    String query = String.format("http://10.0.2.2:9000/Android/login?mail=" + mail + "&password=" + password);
+                    EditText nameIn = findViewById(R.id.registerEditTextFullName);
+                    String fullName = nameIn.getText().toString();
+                    String query = String.format("http://10.0.2.2:9000/Android/register?mail=" + mail + "&password=" + password + "&fullName=" + fullName);
                     URL url = new URL(query);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000);
@@ -49,19 +48,20 @@ public class MainActivity extends AppCompatActivity {
                     conn.setRequestMethod("GET");
                     conn.setDoInput(true);
                     conn.connect();
-
-                    //Response
                     stream = conn.getInputStream();
+
                     BufferedReader reader = null;
+
                     StringBuilder sb = new StringBuilder();
+
                     reader = new BufferedReader(new InputStreamReader(stream));
+
                     String line = null;
                     while ((line = reader.readLine()) != null) {
                         sb.append(line);
                     }
                     result = sb.toString();
 
-                    //Result processing
                     if(result.equals("0")) {
                         handler.post(new Runnable() {
                             public void run() {
@@ -75,14 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     else if (result.equals("-1")) {
                         handler.post(new Runnable() {
                             public void run() {
-                                Toast.makeText(activity.getApplicationContext(), "Mail address does not exist. Try again.", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                    else if (result.equals("-2")) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(activity.getApplicationContext(), "Wrong password. Try again.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity.getApplicationContext(), "Mail address does already exist. Try again.", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -101,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void signUp(View view) {
-        Intent intent = new Intent(activity, RegisterActivity.class);
-        activity.startActivity(intent);
+    public void goBack(View view) {
+        finish();
     }
 }

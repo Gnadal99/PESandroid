@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">PESandroid</string>
+    <string name="log_in">Log in</string>
+    <string name="password">Password</string>
+    <string name="mail_address">Mail address</string>
+    <string name="title_login">EETAC Mail - Login</string>
+    <string name="still_without_account">Still without account?</string>
+    <string name="register_title">EETAC Mail - Sign up</string>
 </resources>
