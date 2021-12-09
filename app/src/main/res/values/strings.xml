@@ -6,4 +6,5 @@
     <string name="title_login">EETAC Mail - Login</string>
     <string name="still_without_account">Still without account?</string>
     <string name="register_title">EETAC Mail - Sign up</string>
+    <string name="delete_acc">Delete Account</string>
 </resources>
