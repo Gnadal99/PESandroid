@@ -7,4 +7,19 @@
     <string name="still_without_account">Still without account?</string>
     <string name="register_title">EETAC Mail - Sign up</string>
     <string name="delete_acc">Delete Account</string>
+    <string name="show_inbox">Show inbox:</string>
+    <string name="more_options">More options:</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="button">Button</string>
+    <string-array name="inboxSelect">
+        <item>Main</item>
+        <item>Spam</item>
+        <item>Sent</item>
+    </string-array>
+    <string-array name="inboxOptions">
+        <item>Select</item>
+        <item>Log out</item>
+        <item>Update profile</item>
+        <item>Delete account</item>
+    </string-array>
 </resources>

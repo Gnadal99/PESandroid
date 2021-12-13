@@ -29,8 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         this.activity = this;
 
-        ProgressBar pgbar = findViewById(R.id.registerProgressBar);
-        pgbar.setVisibility(View.INVISIBLE);
+        ProgressBar pgBar = findViewById(R.id.registerProgressBar);
+        pgBar.setVisibility(View.INVISIBLE);
     }
 
     public void register(View view) {
@@ -52,19 +52,19 @@ public class RegisterActivity extends AppCompatActivity {
                         public void run() {
                             TextView title = findViewById(R.id.registerTitleText);
                             title.setVisibility(View.INVISIBLE);
-                            ImageView imagen = findViewById(R.id.registerImageView);
-                            imagen.setVisibility(View.INVISIBLE);
+                            ImageView image = findViewById(R.id.registerImageView);
+                            image.setVisibility(View.INVISIBLE);
                             EditText mailbox = findViewById(R.id.registerEditTextEmailAddress);
                             mailbox.setVisibility(View.INVISIBLE);
-                            EditText pasbox = findViewById(R.id.registerEditTextPassword);
-                            pasbox.setVisibility(View.INVISIBLE);
-                            Button buto = findViewById(R.id.registerBtn);
-                            buto.setVisibility(View.INVISIBLE);
-                            TextView textito2 = findViewById(R.id.registerSignUpLink);
-                            textito2.setVisibility(View.INVISIBLE);
+                            EditText passBox = findViewById(R.id.registerEditTextPassword);
+                            passBox.setVisibility(View.INVISIBLE);
+                            Button button = findViewById(R.id.registerBtn);
+                            button.setVisibility(View.INVISIBLE);
+                            TextView text2 = findViewById(R.id.registerSignUpLink);
+                            text2.setVisibility(View.INVISIBLE);
 
-                            ProgressBar pgbar = findViewById(R.id.registerProgressBar);
-                            pgbar.setVisibility(View.VISIBLE);
+                            ProgressBar pgBar = findViewById(R.id.registerProgressBar);
+                            pgBar.setVisibility(View.VISIBLE);
                         }
                     });
 
@@ -100,19 +100,19 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 TextView title = findViewById(R.id.registerTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.registerImageView);
-                                imagen.setVisibility(View.VISIBLE);
+                                ImageView image = findViewById(R.id.registerImageView);
+                                image.setVisibility(View.VISIBLE);
                                 EditText mailbox = findViewById(R.id.registerEditTextEmailAddress);
                                 mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.registerEditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.registerBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.registerSignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
+                                EditText passBox = findViewById(R.id.registerEditTextPassword);
+                                passBox.setVisibility(View.VISIBLE);
+                                Button button = findViewById(R.id.registerBtn);
+                                button.setVisibility(View.VISIBLE);
+                                TextView text2 = findViewById(R.id.registerSignUpLink);
+                                text2.setVisibility(View.VISIBLE);
 
-                                ProgressBar pgbar = findViewById(R.id.registerProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
+                                ProgressBar pgBar = findViewById(R.id.registerProgressBar);
+                                pgBar.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
@@ -123,19 +123,19 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 TextView title = findViewById(R.id.registerTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.registerImageView);
-                                imagen.setVisibility(View.VISIBLE);
+                                ImageView image = findViewById(R.id.registerImageView);
+                                image.setVisibility(View.VISIBLE);
                                 EditText mailbox = findViewById(R.id.registerEditTextEmailAddress);
                                 mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.registerEditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.registerBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.registerSignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
+                                EditText passBox = findViewById(R.id.registerEditTextPassword);
+                                passBox.setVisibility(View.VISIBLE);
+                                Button button = findViewById(R.id.registerBtn);
+                                button.setVisibility(View.VISIBLE);
+                                TextView text2 = findViewById(R.id.registerSignUpLink);
+                                text2.setVisibility(View.VISIBLE);
 
-                                ProgressBar pgbar = findViewById(R.id.registerProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
+                                ProgressBar pgBar = findViewById(R.id.registerProgressBar);
+                                pgBar.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
@@ -146,19 +146,19 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 TextView title = findViewById(R.id.registerTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.registerImageView);
-                                imagen.setVisibility(View.VISIBLE);
+                                ImageView image = findViewById(R.id.registerImageView);
+                                image.setVisibility(View.VISIBLE);
                                 EditText mailbox = findViewById(R.id.registerEditTextEmailAddress);
                                 mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.registerEditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.registerBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.registerSignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
+                                EditText passBox = findViewById(R.id.registerEditTextPassword);
+                                passBox.setVisibility(View.VISIBLE);
+                                Button button = findViewById(R.id.registerBtn);
+                                button.setVisibility(View.VISIBLE);
+                                TextView text2 = findViewById(R.id.registerSignUpLink);
+                                text2.setVisibility(View.VISIBLE);
 
-                                ProgressBar pgbar = findViewById(R.id.registerProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
+                                ProgressBar pgBar = findViewById(R.id.registerProgressBar);
+                                pgBar.setVisibility(View.INVISIBLE);
                             }
                         });
                     }

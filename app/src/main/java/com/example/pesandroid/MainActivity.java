@@ -225,8 +225,6 @@ public class MainActivity extends AppCompatActivity {
             Handler handler = new Handler();
             public void run() {
                 try {
-
-
                     handler.post(new Runnable() {
                         public void run() {
                             TextView title = findViewById(R.id.loginTitleText);

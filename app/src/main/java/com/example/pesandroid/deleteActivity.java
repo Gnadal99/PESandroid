@@ -19,14 +19,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class deleteActivity extends AppCompatActivity {
+
     deleteActivity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
         this.activity = this;
-
     }
+
     public void delete(View view) {
         new Thread(new Runnable() {
 
@@ -40,7 +42,6 @@ public class deleteActivity extends AppCompatActivity {
                     EditText passwordIn = findViewById(R.id.deleteEditTextPassword4);
                     String password = passwordIn.getText().toString();
 
-
                     handler.post(new Runnable() {
                         public void run() {
 
@@ -53,7 +54,6 @@ public class deleteActivity extends AppCompatActivity {
 
                             //TextView texto = findViewById(R.id.textview);
                             //texto.setText(result)
-
                         }
                     });
 
@@ -133,7 +133,6 @@ public class deleteActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 
     public void goBack(View view) {
         finish();
