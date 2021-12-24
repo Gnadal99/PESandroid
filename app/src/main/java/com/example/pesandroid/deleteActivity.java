@@ -134,7 +134,7 @@ public class deleteActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void goBack(View view) {
+    public void back(View view) {
         finish();
     }
 }

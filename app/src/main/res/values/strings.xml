@@ -18,6 +18,7 @@
     </string-array>
     <string-array name="inboxOptions">
         <item>Select</item>
+        <item>New message</item>
         <item>Log out</item>
         <item>Update profile</item>
         <item>Delete account</item>

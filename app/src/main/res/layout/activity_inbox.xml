@@ -34,13 +34,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/inboxRecyclerView"
-        android:layout_width="308dp"
-        android:layout_height="421dp"
+        android:layout_width="341dp"
+        android:layout_height="440dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/border"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,50 +48,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inboxSelectSpinner" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="94dp"
-        android:layout_height="48dp"
-        android:onClick="back"
-        android:text="@string/button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.845"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.72" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="173dp"
-        android:layout_height="48dp"
-        android:onClick="deleteAccount"
-        android:text="@string/delete_account"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.72"
-        tools:text="@string/delete_acc" />
-
     <Spinner
         android:id="@+id/inboxSelectSpinner"
         android:layout_width="208dp"
         android:layout_height="48dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
+        android:entries="@array/inboxSelect"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:entries="@array/inboxSelect"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/inboxSelectTextView"
         android:layout_width="103dp"
         android:layout_height="23dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="43dp"
         android:layout_marginEnd="1dp"
         android:text="@string/show_inbox"
         android:textSize="16sp"

@@ -4,31 +4,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.pesandroid.models.Message;
+
+import com.example.pesandroid.models.Mail;
+
 import java.util.List;
 
 public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> {
-    private List<Message> values;
+    private List<Mail> values;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView txtHeader;
-        public TextView txtFooter;
+        public TextView mailOut;
+        public TextView dateOut;
+        public TextView titleOut;
+        public TextView bodyOut;
         public View layout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            txtHeader = v.findViewById(R.id.firstLine);
-            txtFooter = v.findViewById(R.id.secondLine);
+            mailOut = v.findViewById(R.id.firstLine);
+            dateOut = v.findViewById(R.id.firstLine2);
+            titleOut = v.findViewById(R.id.secondLine);
+            bodyOut = v.findViewById(R.id.thirdLine);
         }
     }
 
-    public void setData(List<Message> myData) {
+    public void setData(List<Mail> myData) {
         values = myData;
         notifyDataSetChanged();
     }
@@ -48,10 +56,12 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your data at this position
         // - replace the contents of the view with that element
-        Message c = values.get(position);
-        holder.txtHeader.setText(c.title);
-        holder.txtFooter.setText(c.body);
-        holder.txtHeader.setOnClickListener(v -> {
+        Mail m = values.get(position);
+        holder.mailOut.setText(m.mail);
+        holder.dateOut.setText(m.date.toString());
+        holder.titleOut.setText(m.message.title);
+        holder.bodyOut.setText(m.message.body);
+        holder.mailOut.setOnClickListener(v -> {
             /*int i = 0;
             boolean found = false;
             while(i < values.size() && !found) {
