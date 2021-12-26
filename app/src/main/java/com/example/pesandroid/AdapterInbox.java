@@ -4,28 +4,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.pesandroid.models.Mail;
-
 import java.util.List;
 
 public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> {
+
+    //Data to view on recyclerView is stored here
     private List<Mail> values;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+    //Create complementary class ViewHolder for setting the layout structure
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
+
+        //Objects in the layout are saved here (see file res.values.row_layout_no_images.xml)
         public TextView mailOut;
         public TextView dateOut;
         public TextView titleOut;
         public TextView bodyOut;
         public View layout;
 
+        //Constructor
         public ViewHolder(View v) {
             super(v);
             layout = v;
@@ -41,26 +39,28 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    // Create new views (invoked by the layout manager)
+    // Create new views (invoked by the layout manager) (view = line of recyclerView)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
+        // create a new view giving an XML file as parameter
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.row_layout_no_images, parent, false);
-        // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        // - get element from your data at this position
-        // - replace the contents of the view with that element
+        //Get element from data at a given position
         Mail m = values.get(position);
+
+        //Replace the contents of the view with that element
         holder.mailOut.setText(m.mail);
         holder.dateOut.setText(m.date.toString());
         holder.titleOut.setText(m.message.title);
         holder.bodyOut.setText(m.message.body);
+
+        //The code inside will be executed when clicking the mail of any message in recyclerView
         holder.mailOut.setOnClickListener(v -> {
             /*int i = 0;
             boolean found = false;
@@ -79,7 +79,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
         });
     }
 
-    // Return the size of your data (invoked by the layout manager)
+    // Return the size of data (invoked by the layout manager)
     @Override
     public int getItemCount() {
         if(values == null) return 0;

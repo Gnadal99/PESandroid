@@ -27,9 +27,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class InboxActivity extends AppCompatActivity   {
 
+    //Objects for this activity, the adapter for recyclerView and spinners are saved here
     InboxActivity activity;
     AdapterInbox adapter;
     Spinner inboxSelectSpinner;
@@ -37,28 +39,33 @@ public class InboxActivity extends AppCompatActivity   {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //This is executed when loading the activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
         this.activity = this;
+
+        //Get mail from previous activity
         String mail = getIntent().getStringExtra("mail");
 
+        //Set the recyclerView
         RecyclerView recyclerView = findViewById(R.id.inboxRecyclerView);
         recyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(InboxActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Set the adapter
+        // Set the adapter for recyclerView
         adapter = new AdapterInbox();
         recyclerView.setAdapter(adapter);
 
+        //By default, get main inbox
         getInbox(mail, "main");
 
+        //Set spinner for choosing an inbox to see
         inboxSelectSpinner = findViewById(R.id.inboxSelectSpinner);
         inboxSelectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //This is executed when an option is clicked
                 String text = inboxSelectSpinner.getSelectedItem().toString();
                 getInbox(mail, text.toLowerCase());
             }
@@ -69,25 +76,31 @@ public class InboxActivity extends AppCompatActivity   {
             }
         });
 
+        //Set spinner for other options
         inboxOptionsSpinner = findViewById(R.id.inboxOptionsSpinner);
         inboxOptionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //This is executed when an option is clicked
                 String text = inboxOptionsSpinner.getSelectedItem().toString();
+
+                //In function of the clicked option, do anything
                 switch (text) {
                     case "New message":
                         Toast.makeText(activity.getApplicationContext(), "Oops... not implemented.", Toast.LENGTH_LONG).show();
                         break;
                     case "Log out":
+                        //Delete credentials from shared preferences
                         SharedPreferences preferences = getSharedPreferences("MySharedPref", 0);
                         preferences.edit().remove("mail").apply();
                         preferences.edit().remove("password").apply();
                         finish();
                         break;
                     case "Update profile":
-                        Toast.makeText(activity.getApplicationContext(), "Oops... not implemented.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity.getApplicationContext(), "Oops... not implemented", Toast.LENGTH_LONG).show();
                         break;
                     case "Delete account":
+                        //Show activity to delete the account
                         Intent intent = new Intent(activity, deleteActivity.class);
                         activity.startActivity(intent);
                         break;
@@ -103,12 +116,14 @@ public class InboxActivity extends AppCompatActivity   {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //This is executed when user clicks any button of the phone system. If the button was "back", finish the app
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             this.finishAffinity();
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    //Query for getting any inbox introduced as parameter
     public void getInbox(String mail, String inbox) {
         new Thread(new Runnable() {
 
@@ -139,14 +154,18 @@ public class InboxActivity extends AppCompatActivity   {
                     result = sb.toString();
 
                     //Result processing
+                    //If answer is -1, there are no messages on that inbox
                     if (result.equals("-1")) {
                         handler.post(() -> {
+                            //AÑADIR MENSAJE EN ACTIVITY SI NO HAY MAILS
                             Toast.makeText(activity.getApplicationContext(), "Empty inbox (not implemented)", Toast.LENGTH_LONG).show();
                         });
                     }
+                    //In rest of cases, there are results
                     else {
                         handler.post(() -> {
                             try {
+                                //Cast received JSON to a mails array
                                 JSONArray jArray = new JSONArray(result);
                                 List<Mail> mailList = new ArrayList<>();
                                 for(int i = 0; i < jArray.length(); i++) {
@@ -156,13 +175,15 @@ public class InboxActivity extends AppCompatActivity   {
                                     String mail1 = json_array.getString(1);
                                     Date date = null;
                                     try {
-                                        date = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss").parse(json_array.getString(2));
+                                        date = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault()).parse(json_array.getString(2));
                                     } catch (ParseException e) {
                                         e.printStackTrace();
                                     }
                                     Mail email = new Mail(message, mail1, date);
                                     mailList.add(email);
                                 }
+
+                                //Send data to set to adapter
                                 activity.adapter.setData(mailList);
                             } catch (JSONException e) {
                                 e.printStackTrace();

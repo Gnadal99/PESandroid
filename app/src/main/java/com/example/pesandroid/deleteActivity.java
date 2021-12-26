@@ -20,44 +20,43 @@ import java.net.URL;
 
 public class deleteActivity extends AppCompatActivity {
 
+    //Object for this activity is stored here
     deleteActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //This is executed when loading the activity, that is, when launching the app
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
         this.activity = this;
     }
 
+    //Query for deleting an account with credentials introduced by user
     public void delete(View view) {
         new Thread(new Runnable() {
 
             InputStream stream = null;
             String result = null;
-            Handler handler = new Handler();
+            final Handler handler = new Handler();
             public void run() {
                 try {
+
+                    //Obtain data
                     EditText mailIn = findViewById(R.id.deleteEditTextEmailAddress2);
                     String mail = mailIn.getText().toString();
                     EditText passwordIn = findViewById(R.id.deleteEditTextPassword4);
                     String password = passwordIn.getText().toString();
+                    Button button = findViewById(R.id.deleteBtn);
 
-                    handler.post(new Runnable() {
-                        public void run() {
-
-                            EditText mailbox = findViewById(R.id.deleteEditTextEmailAddress2);
-                            mailbox.setVisibility(View.INVISIBLE);
-                            EditText pasbox = findViewById(R.id.deleteEditTextPassword4);
-                            pasbox.setVisibility(View.INVISIBLE);
-                            Button buto = findViewById(R.id.deleteBtn);
-                            buto.setVisibility(View.INVISIBLE);
-
-                            //TextView texto = findViewById(R.id.textview);
-                            //texto.setText(result)
-                        }
+                    handler.post(() -> {
+                        //Change visibilities. Only progress bar must be seen (AÑADIR PROGRESS BAR)
+                        mailIn.setVisibility(View.INVISIBLE);
+                        passwordIn.setVisibility(View.INVISIBLE);
+                        button.setVisibility(View.INVISIBLE);
                     });
 
-                    String query = String.format("http://10.0.2.2:9000/Android/deleteAccount?mail=" + mail + "&password=" + password);
+                    //Query
+                    String query = "http://10.0.2.2:9000/Android/deleteAccount?mail=" + mail + "&password=" + password;
                     URL url = new URL(query);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000);
@@ -67,63 +66,54 @@ public class deleteActivity extends AppCompatActivity {
                     conn.connect();
                     stream = conn.getInputStream();
 
-                    BufferedReader reader = null;
-
+                    //Response
+                    BufferedReader reader;
                     StringBuilder sb = new StringBuilder();
-
                     reader = new BufferedReader(new InputStreamReader(stream));
-
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         sb.append(line);
                     }
                     result = sb.toString();
 
+                    //Result processing
+                    //If answer is 0, user has been removed correctly
                     if(result.equals("0")) {
-                        //User removed correctly
-                        handler.post(new Runnable() {
-                            public void run() {
+                        handler.post(() -> {
+                            //Render toast with result message
+                            Toast.makeText(activity.getApplicationContext(), "Your account has been deleted.", Toast.LENGTH_LONG).show();
 
-                                Toast.makeText(activity.getApplicationContext(), "Your account has been deleted.", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(activity, MainActivity.class);
-                                activity.startActivity(intent);
+                            //Show login activity
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            activity.startActivity(intent);
 
-                                EditText mailbox = findViewById(R.id.deleteEditTextEmailAddress2);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.deleteEditTextPassword4);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.deleteBtn);
-                                buto.setVisibility(View.VISIBLE);
-                            }
+                            //Change visibilities. Progress bar must not be seen
+                            mailIn.setVisibility(View.VISIBLE);
+                            passwordIn.setVisibility(View.VISIBLE);
+                            button.setVisibility(View.VISIBLE);
                         });
                     }
+                    //If answer is -1, there was an error due to credentials
                     else if (result.equals("-1")) {
-                        //Retry
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(activity.getApplicationContext(), "Wrong credentials. Make sure the data has been introduced properly.", Toast.LENGTH_LONG).show();
+                        handler.post(() -> {
+                            //Render toast with error message
+                            Toast.makeText(activity.getApplicationContext(), "Wrong credentials. Make sure the data has been introduced properly.", Toast.LENGTH_LONG).show();
 
-                                EditText mailbox = findViewById(R.id.deleteEditTextEmailAddress2);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.deleteEditTextPassword4);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.deleteBtn);
-                                buto.setVisibility(View.VISIBLE);
-                            }
+                            //Change visibilities. Progress bar must not be seen
+                            mailIn.setVisibility(View.VISIBLE);
+                            passwordIn.setVisibility(View.VISIBLE);
+                            button.setVisibility(View.VISIBLE);
                         });
                     }
                     else {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                Toast.makeText(activity.getApplicationContext(), "Unexpected error.", Toast.LENGTH_LONG).show();
+                        handler.post(() -> {
+                            //Render toast with error message
+                            Toast.makeText(activity.getApplicationContext(), "Unexpected error.", Toast.LENGTH_LONG).show();
 
-                                EditText mailbox = findViewById(R.id.deleteEditTextEmailAddress2);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.deleteEditTextPassword4);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.deleteBtn);
-                                buto.setVisibility(View.VISIBLE);
-                            }
+                            //Change visibilities. Progress bar must not be seen
+                            mailIn.setVisibility(View.VISIBLE);
+                            passwordIn.setVisibility(View.VISIBLE);
+                            button.setVisibility(View.VISIBLE);
                         });
                     }
 
@@ -134,6 +124,7 @@ public class deleteActivity extends AppCompatActivity {
         }).start();
     }
 
+    //This is executed when return button is clicked
     public void back(View view) {
         finish();
     }

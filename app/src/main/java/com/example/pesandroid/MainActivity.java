@@ -22,63 +22,65 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Object for this activity is stored here
     MainActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //This is executed when loading the activity, that is, when launching the app
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.activity = this;
-        ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-        pgbar.setVisibility(View.INVISIBLE);
 
+        //Make progress bar invisible
+        ProgressBar pgBar = findViewById(R.id.loginProgressBar);
+        pgBar.setVisibility(View.INVISIBLE);
+
+        //Look for shared preferences. In case there are stored values, try to log in
         SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
         String mail = sh.getString("mail", null);
         String password = sh.getString("password", null);
-
         if (mail != null && password != null){
             loginWithPreferences(mail, password);
         }
     }
 
+    //Query for logging in with credentials introduced by user
     public void login(View view) {
         new Thread(new Runnable() {
 
             InputStream stream = null;
             String result = null;
-            Handler handler = new Handler();
+            final Handler handler = new Handler();
             public void run() {
                 try {
                     //Obtain data
                     EditText mailIn = findViewById(R.id.logineditTextEmailAddress);
-                    String mail = mailIn.getText().toString();
                     EditText passwordIn = findViewById(R.id.logineditTextPassword);
+                    ImageView image = findViewById(R.id.loginImageView);
+                    Button button = findViewById(R.id.loginBtn);
+                    TextView text = findViewById(R.id.loginsignUpText);
+                    TextView text2 = findViewById(R.id.loginsignUpLink);
+                    ProgressBar pgBar = findViewById(R.id.loginProgressBar);
+                    String mail = mailIn.getText().toString();
                     String password = passwordIn.getText().toString();
 
-                    handler.post(new Runnable() {
-                        public void run() {
-                            TextView title = findViewById(R.id.loginTitleText);
-                            title.setVisibility(View.INVISIBLE);
-                            ImageView imagen = findViewById(R.id.loginImageView);
-                            imagen.setVisibility(View.INVISIBLE);
-                            EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                            mailbox.setVisibility(View.INVISIBLE);
-                            EditText pasbox = findViewById(R.id.logineditTextPassword);
-                            pasbox.setVisibility(View.INVISIBLE);
-                            Button buto = findViewById(R.id.loginBtn);
-                            buto.setVisibility(View.INVISIBLE);
-                            TextView textito = findViewById(R.id.loginsignUpText);
-                            textito.setVisibility(View.INVISIBLE);
-                            TextView textito2 = findViewById(R.id.loginsignUpLink);
-                            textito2.setVisibility(View.INVISIBLE);
+                    handler.post(() -> {
+                        //Change visibilities. Only progress bar must be seen
+                        TextView title = findViewById(R.id.loginTitleText);
+                        title.setVisibility(View.INVISIBLE);
+                        image.setVisibility(View.INVISIBLE);
+                        mailIn.setVisibility(View.INVISIBLE);
+                        passwordIn.setVisibility(View.INVISIBLE);
+                        button.setVisibility(View.INVISIBLE);
+                        text.setVisibility(View.INVISIBLE);
+                        text2.setVisibility(View.INVISIBLE);
 
-                            ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                            pgbar.setVisibility(View.VISIBLE);
-                        }
+                        pgBar.setVisibility(View.VISIBLE);
                     });
 
                     //Query
-                    String query = String.format("http://10.0.2.2:9000/Android/login?mail=" + mail + "&password=" + password);
+                    String query = "http://10.0.2.2:9000/Android/login?mail=" + mail + "&password=" + password;
                     URL url = new URL(query);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000);
@@ -89,125 +91,99 @@ public class MainActivity extends AppCompatActivity {
 
                     //Response
                     stream = conn.getInputStream();
-                    BufferedReader reader = null;
+                    BufferedReader reader;
                     StringBuilder sb = new StringBuilder();
                     reader = new BufferedReader(new InputStreamReader(stream));
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         sb.append(line);
                     }
                     result = sb.toString();
 
                     //Result processing
-                    if(result.equals("0")) {
-                        handler.post(new Runnable() {
-                            public void run() {
+                    switch (result) {
+                        //If answer is 0, credentials are right
+                        case "0":
+                            handler.post(() -> {
+                                //Save shared preferences (AÑADIR OPCION PARA PREGUNTAR)
                                 SharedPreferences sharedPreferences = activity.getSharedPreferences("MySharedPref", 0);
                                 SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
                                 myEdit.putString("mail", mail);
                                 myEdit.putString("password", password);
                                 myEdit.apply();
 
+                                //Change to inbox activity. Before, send to it the mail
                                 Intent intent = new Intent(activity, InboxActivity.class);
                                 intent.putExtra("mail", mail);
-                                intent.putExtra("password", password);
                                 activity.startActivity(intent);
 
+                                //Change visibilities. Progress bar must not be seen
                                 TextView title = findViewById(R.id.loginTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
+                                image.setVisibility(View.VISIBLE);
+                                mailIn.setVisibility(View.VISIBLE);
+                                passwordIn.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
 
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }
-                    else if (result.equals("-1")) {
-                        handler.post(new Runnable() {
-                            public void run() {
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        //If answer is -1, the mail introduced does not exist
+                        case "-1":
+                            handler.post(() -> {
+                                //Render toast with error message
                                 Toast.makeText(activity.getApplicationContext(), "Mail address does not exist. Try again.", Toast.LENGTH_LONG).show();
 
+                                //Change visibilities. Progress bar must not be seen
                                 TextView title = findViewById(R.id.loginTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }
-                    else if (result.equals("-2")) {
-                        handler.post(new Runnable() {
-                            public void run() {
+                                image.setVisibility(View.VISIBLE);
+                                mailIn.setVisibility(View.VISIBLE);
+                                passwordIn.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        //If answer is -2, the password introduced is wrong
+                        case "-2":
+                            handler.post(() -> {
+                                //Render toast with error message
                                 Toast.makeText(activity.getApplicationContext(), "Wrong password. Try again.", Toast.LENGTH_LONG).show();
 
+                                //Change visibilities. Progress bar must not be seen
                                 TextView title = findViewById(R.id.loginTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }
-                    else {
-                        handler.post(new Runnable() {
-                            public void run() {
+                                image.setVisibility(View.VISIBLE);
+                                mailIn.setVisibility(View.VISIBLE);
+                                passwordIn.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        //This option should never happen
+                        default:
+                            handler.post(() -> {
+                                //Render toast with error message
                                 Toast.makeText(activity.getApplicationContext(), "Unexpected error.", Toast.LENGTH_LONG).show();
 
+                                //Change visibilities. Progress bar must not be seen
                                 TextView title = findViewById(R.id.loginTitleText);
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                                image.setVisibility(View.VISIBLE);
+                                mailIn.setVisibility(View.VISIBLE);
+                                passwordIn.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
                     }
 
                 } catch (Exception e) {
@@ -217,38 +193,38 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+    //Query for logging in with credentials saved on shared preferences
     public void loginWithPreferences(String mail, String password) {
         new Thread(new Runnable() {
 
             InputStream stream = null;
             String result = null;
-            Handler handler = new Handler();
+            final Handler handler = new Handler();
             public void run() {
                 try {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            TextView title = findViewById(R.id.loginTitleText);
-                            title.setVisibility(View.INVISIBLE);
-                            ImageView imagen = findViewById(R.id.loginImageView);
-                            imagen.setVisibility(View.INVISIBLE);
-                            EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                            mailbox.setVisibility(View.INVISIBLE);
-                            EditText pasbox = findViewById(R.id.logineditTextPassword);
-                            pasbox.setVisibility(View.INVISIBLE);
-                            Button buto = findViewById(R.id.loginBtn);
-                            buto.setVisibility(View.INVISIBLE);
-                            TextView textito = findViewById(R.id.loginsignUpText);
-                            textito.setVisibility(View.INVISIBLE);
-                            TextView textito2 = findViewById(R.id.loginsignUpLink);
-                            textito2.setVisibility(View.INVISIBLE);
+                    TextView title = findViewById(R.id.loginTitleText);
+                    ImageView image = findViewById(R.id.loginImageView);
+                    EditText mailBox = findViewById(R.id.logineditTextEmailAddress);
+                    EditText passBox = findViewById(R.id.logineditTextPassword);
+                    Button button = findViewById(R.id.loginBtn);
+                    TextView text = findViewById(R.id.loginsignUpText);
+                    TextView text2 = findViewById(R.id.loginsignUpLink);
+                    ProgressBar pgBar = findViewById(R.id.loginProgressBar);
 
-                            ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                            pgbar.setVisibility(View.VISIBLE);
-                        }
+                    handler.post(() -> {
+                        //Change visibilities. Only progress bar must be seen
+                        title.setVisibility(View.INVISIBLE);
+                        image.setVisibility(View.INVISIBLE);
+                        mailBox.setVisibility(View.INVISIBLE);
+                        passBox.setVisibility(View.INVISIBLE);
+                        button.setVisibility(View.INVISIBLE);
+                        text.setVisibility(View.INVISIBLE);
+                        text2.setVisibility(View.INVISIBLE);
+                        pgBar.setVisibility(View.VISIBLE);
                     });
 
                     //Query
-                    String query = String.format("http://10.0.2.2:9000/Android/login?mail=" + mail + "&password=" + password);
+                    String query = "http://10.0.2.2:9000/Android/login?mail=" + mail + "&password=" + password;
                     URL url = new URL(query);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setReadTimeout(10000);
@@ -259,125 +235,94 @@ public class MainActivity extends AppCompatActivity {
 
                     //Response
                     stream = conn.getInputStream();
-                    BufferedReader reader = null;
+                    BufferedReader reader;
                     StringBuilder sb = new StringBuilder();
                     reader = new BufferedReader(new InputStreamReader(stream));
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         sb.append(line);
                     }
                     result = sb.toString();
 
                     //Result processing
-                    if(result.equals("0")) {
-                        handler.post(new Runnable() {
-                            public void run() {
+                    switch (result) {
+                        //If answer is 0, credentials are right
+                        case "0":
+                            handler.post(() -> {
+                                //Save credentials
                                 SharedPreferences sharedPreferences = activity.getSharedPreferences("MySharedPref", 0);
                                 SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
                                 myEdit.putString("mail", mail);
                                 myEdit.putString("password", password);
                                 myEdit.apply();
 
+                                //Show inbox activity. Before that, send to it the mail
                                 Intent intent = new Intent(activity, InboxActivity.class);
                                 intent.putExtra("mail", mail);
-                                intent.putExtra("password", password);
                                 activity.startActivity(intent);
 
-                                TextView title = findViewById(R.id.loginTitleText);
+                                //Change visibilities. Progress bar must not be seen
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }
-                    else if (result.equals("-1")) {
-                        handler.post(new Runnable() {
-                            public void run() {
+                                image.setVisibility(View.VISIBLE);
+                                mailBox.setVisibility(View.VISIBLE);
+                                passBox.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        //If answer is -1, the mail introduced does not exist
+                        case "-1":
+                            handler.post(() -> {
+                                //Render toast with error message
                                 Toast.makeText(activity.getApplicationContext(), "Mail address does not exist. Try again.", Toast.LENGTH_LONG).show();
 
-                                TextView title = findViewById(R.id.loginTitleText);
+                                //Change visibilities. Progress bar must not be seen
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }
-                    else if (result.equals("-2")) {
-                        handler.post(new Runnable() {
-                            public void run() {
+                                image.setVisibility(View.VISIBLE);
+                                mailBox.setVisibility(View.VISIBLE);
+                                passBox.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        //If answer is -2, the password introduced is wrong
+                        case "-2":
+                            handler.post(() -> {
+                                //Render toast with error message
                                 Toast.makeText(activity.getApplicationContext(), "Wrong password. Try again.", Toast.LENGTH_LONG).show();
 
-                                TextView title = findViewById(R.id.loginTitleText);
+                                //Change visibilities. Progress bar must not be seen
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
-                    }
-                    else {
-                        handler.post(new Runnable() {
-                            public void run() {
+                                image.setVisibility(View.VISIBLE);
+                                mailBox.setVisibility(View.VISIBLE);
+                                passBox.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        //This option should never happen
+                        default:
+                            handler.post(() -> {
+                                //Render toast with error message
                                 Toast.makeText(activity.getApplicationContext(), "Unexpected error.", Toast.LENGTH_LONG).show();
 
-                                TextView title = findViewById(R.id.loginTitleText);
+                                //Change visibilities. Progress bar must not be seen
                                 title.setVisibility(View.VISIBLE);
-                                ImageView imagen = findViewById(R.id.loginImageView);
-                                imagen.setVisibility(View.VISIBLE);
-                                EditText mailbox = findViewById(R.id.logineditTextEmailAddress);
-                                mailbox.setVisibility(View.VISIBLE);
-                                EditText pasbox = findViewById(R.id.logineditTextPassword);
-                                pasbox.setVisibility(View.VISIBLE);
-                                Button buto = findViewById(R.id.loginBtn);
-                                buto.setVisibility(View.VISIBLE);
-                                TextView textito = findViewById(R.id.loginsignUpText);
-                                textito.setVisibility(View.VISIBLE);
-                                TextView textito2 = findViewById(R.id.loginsignUpLink);
-                                textito2.setVisibility(View.VISIBLE);
-
-                                ProgressBar pgbar = findViewById(R.id.loginProgressBar);
-                                pgbar.setVisibility(View.INVISIBLE);
-                            }
-                        });
+                                image.setVisibility(View.VISIBLE);
+                                mailBox.setVisibility(View.VISIBLE);
+                                passBox.setVisibility(View.VISIBLE);
+                                button.setVisibility(View.VISIBLE);
+                                text.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                pgBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
                     }
 
                 } catch (Exception e) {
@@ -387,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+    //Event that executes when user clicks signUp button
     public void signUp(View view) {
         Intent intent = new Intent(activity, RegisterActivity.class);
         activity.startActivity(intent);
