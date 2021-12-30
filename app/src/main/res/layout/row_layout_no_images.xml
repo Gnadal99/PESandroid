@@ -46,12 +46,12 @@
 
     <TextView
         android:id="@+id/firstLine2"
-        android:layout_width="149dp"
+        android:layout_width="125dp"
         android:layout_height="37dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
-        android:layout_marginEnd="9dp"
+        android:layout_marginEnd="6dp"
         android:text="Date"
         android:textAlignment="center"
         android:textSize="16sp" />

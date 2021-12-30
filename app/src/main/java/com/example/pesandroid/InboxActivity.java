@@ -22,12 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class InboxActivity extends AppCompatActivity   {
 
@@ -54,7 +50,7 @@ public class InboxActivity extends AppCompatActivity   {
         recyclerView.setLayoutManager(layoutManager);
 
         // Set the adapter for recyclerView
-        adapter = new AdapterInbox();
+        adapter = new AdapterInbox(this.getApplicationContext(), mail);
         recyclerView.setAdapter(adapter);
 
         //By default, get main inbox
@@ -87,7 +83,10 @@ public class InboxActivity extends AppCompatActivity   {
                 //In function of the clicked option, do anything
                 switch (text) {
                     case "New message":
-                        Toast.makeText(activity.getApplicationContext(), "Oops... not implemented.", Toast.LENGTH_LONG).show();
+                        //Change to send message activity. Before, send to it the mail
+                        Intent intentSend = new Intent(activity, SendMessageActivity.class);
+                        intentSend.putExtra("sender", mail);
+                        activity.startActivity(intentSend);
                         break;
                     case "Log out":
                         //Delete credentials from shared preferences
@@ -156,10 +155,7 @@ public class InboxActivity extends AppCompatActivity   {
                     //Result processing
                     //If answer is -1, there are no messages on that inbox
                     if (result.equals("-1")) {
-                        handler.post(() -> {
-                            //AÑADIR MENSAJE EN ACTIVITY SI NO HAY MAILS
-                            Toast.makeText(activity.getApplicationContext(), "Empty inbox (not implemented)", Toast.LENGTH_LONG).show();
-                        });
+                        handler.post(() -> Toast.makeText(activity.getApplicationContext(), "Empty inbox", Toast.LENGTH_LONG).show());
                     }
                     //In rest of cases, there are results
                     else {
@@ -173,18 +169,18 @@ public class InboxActivity extends AppCompatActivity   {
                                     JSONObject json_data = json_array.getJSONObject(0);
                                     Message message = new Message(json_data.getString("title"), json_data.getString("body"));
                                     String mail1 = json_array.getString(1);
-                                    Date date = null;
-                                    try {
-                                        date = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault()).parse(json_array.getString(2));
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                    String date = json_array.getString(2);
                                     Mail email = new Mail(message, mail1, date);
                                     mailList.add(email);
                                 }
 
+                                List<Mail> sortList = new ArrayList<>();
+                                for(int i = mailList.size() - 1; i >= 0; i--) {
+                                    sortList.add(mailList.get(i));
+                                }
+
                                 //Send data to set to adapter
-                                activity.adapter.setData(mailList);
+                                adapter.setData(sortList);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

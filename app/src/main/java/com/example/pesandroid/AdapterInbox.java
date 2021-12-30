@@ -1,17 +1,30 @@
 package com.example.pesandroid;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.pesandroid.models.Mail;
+import java.util.Arrays;
 import java.util.List;
 
 public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> {
 
     //Data to view on recyclerView is stored here
     private List<Mail> values;
+
+    //Here we store the context from the activity when adapter is called
+    Context context;
+    String receiver;
+
+    //Constructor for getting activity's context
+    public AdapterInbox(Context context, String receiver) {
+        this.context = context;
+        this.receiver = receiver;
+    }
 
     //Create complementary class ViewHolder for setting the layout structure
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,26 +69,21 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
 
         //Replace the contents of the view with that element
         holder.mailOut.setText(m.mail);
-        holder.dateOut.setText(m.date.toString());
+        holder.dateOut.setText(m.date);
         holder.titleOut.setText(m.message.title);
         holder.bodyOut.setText(m.message.body);
 
         //The code inside will be executed when clicking the mail of any message in recyclerView
         holder.mailOut.setOnClickListener(v -> {
-            /*int i = 0;
-            boolean found = false;
-            while(i < values.size() && !found) {
-                if(values.get(i).getId() == Integer.parseInt(String.valueOf(holder.txtHeader.getText()).split(" ")[2])) found = true;
-                else i++;
-            }
-            if(found) {
-                Intent intent = new Intent(v.getContext(), Activity_Statistics_Specifications.class);
-                intent.putExtra("id", String.valueOf(values.get(i).getId()));
-                intent.putExtra("duration", String.valueOf(values.get(i).getDuration()));
-                intent.putExtra("victory", String.valueOf(values.get(i).getVictory()));
-                intent.putExtra("score", String.valueOf(values.get(i).getScore()));
-                v.getContext().startActivity(intent);
-            }*/
+            //Show details from message on another activity
+            Intent intent = new Intent(context, ReadMessageActivity.class);
+            intent.putExtra("receiver", receiver);
+            intent.putExtra("sender", values.get(holder.getAdapterPosition()).mail);
+            intent.putExtra("title", values.get(holder.getAdapterPosition()).message.title);
+            intent.putExtra("date", values.get(holder.getAdapterPosition()).date);
+            intent.putExtra("body", values.get(holder.getAdapterPosition()).message.body);
+
+            context.startActivity(intent);
         });
     }
 
