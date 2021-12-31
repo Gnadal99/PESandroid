@@ -95,13 +95,16 @@ public class InboxActivity extends AppCompatActivity   {
                         preferences.edit().remove("password").apply();
                         finish();
                         break;
+
                     case "Update profile":
-                        Toast.makeText(activity.getApplicationContext(), "Oops... not implemented", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(activity, UpdateActivity.class);
+                        activity.startActivity(intent);
                         break;
+
                     case "Delete account":
                         //Show activity to delete the account
-                        Intent intent = new Intent(activity, deleteActivity.class);
-                        activity.startActivity(intent);
+                        Intent intent2 = new Intent(activity, deleteActivity.class);
+                        activity.startActivity(intent2);
                         break;
                 }
             }

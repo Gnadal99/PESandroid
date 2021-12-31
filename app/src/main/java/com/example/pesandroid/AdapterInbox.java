@@ -83,6 +83,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
             intent.putExtra("date", values.get(holder.getAdapterPosition()).date);
             intent.putExtra("body", values.get(holder.getAdapterPosition()).message.body);
 
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
     }
