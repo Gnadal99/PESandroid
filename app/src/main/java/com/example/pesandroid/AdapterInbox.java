@@ -1,6 +1,5 @@
 package com.example.pesandroid;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.pesandroid.models.Mail;
-import java.util.Arrays;
 import java.util.List;
 
 public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> {
@@ -17,12 +15,12 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
     private List<Mail> values;
 
     //Here we store the context from the activity when adapter is called
-    Context context;
+    InboxActivity activity;
     String receiver;
 
     //Constructor for getting activity's context
-    public AdapterInbox(Context context, String receiver) {
-        this.context = context;
+    public AdapterInbox(InboxActivity activity, String receiver) {
+        this.activity = activity;
         this.receiver = receiver;
     }
 
@@ -45,6 +43,12 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
             titleOut = v.findViewById(R.id.secondLine);
             bodyOut = v.findViewById(R.id.thirdLine);
         }
+    }
+
+    public void clear() {
+        int i = values.size();
+        values = null;
+        notifyItemRangeRemoved(0, i);
     }
 
     public void setData(List<Mail> myData) {
@@ -76,7 +80,8 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
         //The code inside will be executed when clicking the mail of any message in recyclerView
         holder.mailOut.setOnClickListener(v -> {
             //Show details from message on another activity
-            Intent intent = new Intent(context, ReadMessageActivity.class);
+            Intent intent = new Intent(activity.getApplicationContext(), ReadMessageActivity.class);
+            intent.putExtra("inbox", activity.inboxSelectSpinner.getSelectedItem().toString());
             intent.putExtra("receiver", receiver);
             intent.putExtra("sender", values.get(holder.getAdapterPosition()).mail);
             intent.putExtra("title", values.get(holder.getAdapterPosition()).message.title);
@@ -84,7 +89,7 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
             intent.putExtra("body", values.get(holder.getAdapterPosition()).message.body);
 
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            activity.startActivity(intent);
         });
     }
 

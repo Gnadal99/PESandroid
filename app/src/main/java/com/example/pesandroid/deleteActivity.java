@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -22,6 +25,7 @@ public class deleteActivity extends AppCompatActivity {
 
     //Object for this activity is stored here
     deleteActivity activity;
+    String mail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,10 @@ public class deleteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete);
         this.activity = this;
+        mail = getIntent().getStringExtra("sender");
+
+        ProgressBar pBar = findViewById(R.id.deleteAccountProgressBar);
+        pBar.setVisibility(View.INVISIBLE);
     }
 
     //Query for deleting an account with credentials introduced by user
@@ -42,17 +50,27 @@ public class deleteActivity extends AppCompatActivity {
                 try {
 
                     //Obtain data
-                    EditText mailIn = findViewById(R.id.deleteEditTextEmailAddress2);
-                    String mail = mailIn.getText().toString();
                     EditText passwordIn = findViewById(R.id.deleteEditTextPassword4);
                     String password = passwordIn.getText().toString();
                     Button button = findViewById(R.id.deleteBtn);
+                    ProgressBar pBar = findViewById(R.id.deleteAccountProgressBar);
+                    Button backBtn = findViewById(R.id.deleteAccountBackBtn);
+                    TextView titleText = findViewById(R.id.deleteAccountTitleBox);
+                    TextView text = findViewById(R.id.deleteAccountTextBox);
+                    TextView warn = findViewById(R.id.deleteAccountWarningBox);
+                    TextView warn2 = findViewById(R.id.deleteAccountWarningBox2);
 
                     handler.post(() -> {
-                        //Change visibilities. Only progress bar must be seen (AÑADIR PROGRESS BAR)
-                        mailIn.setVisibility(View.INVISIBLE);
+                        //Change visibilities. Only progress bar must be seen
                         passwordIn.setVisibility(View.INVISIBLE);
                         button.setVisibility(View.INVISIBLE);
+                        backBtn.setVisibility(View.INVISIBLE);
+                        titleText.setVisibility(View.INVISIBLE);
+                        text.setVisibility(View.INVISIBLE);
+                        warn.setVisibility(View.INVISIBLE);
+                        warn2.setVisibility(View.INVISIBLE);
+
+                        pBar.setVisibility(View.VISIBLE);
                     });
 
                     //Query
@@ -83,14 +101,25 @@ public class deleteActivity extends AppCompatActivity {
                             //Render toast with result message
                             Toast.makeText(activity.getApplicationContext(), "Your account has been deleted.", Toast.LENGTH_LONG).show();
 
+                            //Delete credentials from shared preferences
+                            SharedPreferences preferences = getSharedPreferences("MySharedPref", 0);
+                            preferences.edit().remove("mail").apply();
+                            preferences.edit().remove("password").apply();
+
                             //Show login activity
                             Intent intent = new Intent(activity, MainActivity.class);
                             activity.startActivity(intent);
 
                             //Change visibilities. Progress bar must not be seen
-                            mailIn.setVisibility(View.VISIBLE);
                             passwordIn.setVisibility(View.VISIBLE);
                             button.setVisibility(View.VISIBLE);
+                            backBtn.setVisibility(View.VISIBLE);
+                            titleText.setVisibility(View.VISIBLE);
+                            text.setVisibility(View.VISIBLE);
+                            warn.setVisibility(View.VISIBLE);
+                            warn2.setVisibility(View.VISIBLE);
+
+                            pBar.setVisibility(View.INVISIBLE);
                         });
                     }
                     //If answer is -1, there was an error due to credentials
@@ -100,9 +129,15 @@ public class deleteActivity extends AppCompatActivity {
                             Toast.makeText(activity.getApplicationContext(), "Wrong credentials. Make sure the data has been introduced properly.", Toast.LENGTH_LONG).show();
 
                             //Change visibilities. Progress bar must not be seen
-                            mailIn.setVisibility(View.VISIBLE);
                             passwordIn.setVisibility(View.VISIBLE);
                             button.setVisibility(View.VISIBLE);
+                            backBtn.setVisibility(View.VISIBLE);
+                            titleText.setVisibility(View.VISIBLE);
+                            text.setVisibility(View.VISIBLE);
+                            warn.setVisibility(View.VISIBLE);
+                            warn2.setVisibility(View.VISIBLE);
+
+                            pBar.setVisibility(View.INVISIBLE);
                         });
                     }
                     else {
@@ -111,9 +146,15 @@ public class deleteActivity extends AppCompatActivity {
                             Toast.makeText(activity.getApplicationContext(), "Unexpected error.", Toast.LENGTH_LONG).show();
 
                             //Change visibilities. Progress bar must not be seen
-                            mailIn.setVisibility(View.VISIBLE);
                             passwordIn.setVisibility(View.VISIBLE);
                             button.setVisibility(View.VISIBLE);
+                            backBtn.setVisibility(View.VISIBLE);
+                            titleText.setVisibility(View.VISIBLE);
+                            text.setVisibility(View.VISIBLE);
+                            warn.setVisibility(View.VISIBLE);
+                            warn2.setVisibility(View.VISIBLE);
+
+                            pBar.setVisibility(View.INVISIBLE);
                         });
                     }
 

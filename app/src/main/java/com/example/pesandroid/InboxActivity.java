@@ -50,7 +50,7 @@ public class InboxActivity extends AppCompatActivity   {
         recyclerView.setLayoutManager(layoutManager);
 
         // Set the adapter for recyclerView
-        adapter = new AdapterInbox(this.getApplicationContext(), mail);
+        adapter = new AdapterInbox(this, mail);
         recyclerView.setAdapter(adapter);
 
         //By default, get main inbox
@@ -87,6 +87,7 @@ public class InboxActivity extends AppCompatActivity   {
                         Intent intentSend = new Intent(activity, SendMessageActivity.class);
                         intentSend.putExtra("sender", mail);
                         activity.startActivity(intentSend);
+                        inboxOptionsSpinner.setSelection(0);
                         break;
                     case "Log out":
                         //Delete credentials from shared preferences
@@ -98,13 +99,17 @@ public class InboxActivity extends AppCompatActivity   {
 
                     case "Update profile":
                         Intent intent = new Intent(activity, UpdateActivity.class);
+                        intent.putExtra("sender", mail);
                         activity.startActivity(intent);
+                        inboxOptionsSpinner.setSelection(0);
                         break;
 
                     case "Delete account":
                         //Show activity to delete the account
                         Intent intent2 = new Intent(activity, deleteActivity.class);
+                        intent2.putExtra("sender", mail);
                         activity.startActivity(intent2);
+                        inboxOptionsSpinner.setSelection(0);
                         break;
                 }
             }
@@ -159,6 +164,7 @@ public class InboxActivity extends AppCompatActivity   {
                     //If answer is -1, there are no messages on that inbox
                     if (result.equals("-1")) {
                         handler.post(() -> Toast.makeText(activity.getApplicationContext(), "Empty inbox", Toast.LENGTH_LONG).show());
+                        adapter.clear();
                     }
                     //In rest of cases, there are results
                     else {

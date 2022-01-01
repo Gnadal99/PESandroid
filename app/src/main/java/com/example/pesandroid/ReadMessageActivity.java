@@ -14,8 +14,11 @@ public class ReadMessageActivity extends AppCompatActivity {
     TextView mailOut;
     TextView dateOut;
     TextView bodyOut;
+    TextView mailText;
 
     String receiver;
+    String inbox;
+    String mail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +29,15 @@ public class ReadMessageActivity extends AppCompatActivity {
 
         //Get parameters from previous activity
         receiver = getIntent().getStringExtra("receiver");
-        String mail = getIntent().getStringExtra("sender");
+        inbox = getIntent().getStringExtra("inbox");
+        mail = getIntent().getStringExtra("sender");
         String title = getIntent().getStringExtra("title");
         String date = getIntent().getStringExtra("date");
         String body = getIntent().getStringExtra("body");
 
         //Show message's details on layout objects
         titleOut = findViewById(R.id.readMessageTitleBox);
+        mailText = findViewById(R.id.readMessageMailText);
         mailOut = findViewById(R.id.readMessageMailBox);
         dateOut = findViewById(R.id.readMessageDateBox);
         bodyOut = findViewById(R.id.readMessageBodyBox);
@@ -40,6 +45,8 @@ public class ReadMessageActivity extends AppCompatActivity {
         mailOut.setText(mail);
         dateOut.setText(date);
         bodyOut.setText(body);
+        if(inbox.equals("Sent"))
+            mailText.setText("Sent to:");
     }
 
     //This function is called each time user clicks "forward" button
@@ -48,7 +55,10 @@ public class ReadMessageActivity extends AppCompatActivity {
         Intent intentSend = new Intent(activity, SendMessageActivity.class);
         intentSend.putExtra("sender", receiver);
         intentSend.putExtra("title", "Fwd: " + titleOut.getText());
-        intentSend.putExtra("body", "\n\n" + mailOut.getText() + " Previously wrote: \n" + bodyOut.getText());
+        if(!inbox.equals("Sent"))
+            intentSend.putExtra("body", "\n\n______________________________________\n\n" + mail + " previously wrote: \n" + bodyOut.getText());
+        else
+            intentSend.putExtra("body", "\n\n______________________________________\n\n" + receiver + " previously wrote: \n" + bodyOut.getText());
         activity.startActivity(intentSend);
     }
 
@@ -59,7 +69,10 @@ public class ReadMessageActivity extends AppCompatActivity {
         intentSend.putExtra("sender", receiver);
         intentSend.putExtra("receiver", mailOut.getText());
         intentSend.putExtra("title", "Re: " + titleOut.getText());
-        intentSend.putExtra("body", "\n\n" + mailOut.getText() + " Previously wrote: \n" + bodyOut.getText());
+        if(!inbox.equals("Sent"))
+            intentSend.putExtra("body", "\n\n______________________________________\n\n" + mail + " previously wrote: \n" + bodyOut.getText());
+        else
+            intentSend.putExtra("body", "\n\n______________________________________\n\n" + receiver + " previously wrote: \n" + bodyOut.getText());
         activity.startActivity(intentSend);
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
         if (mail != null && password != null){
             loginWithPreferences(mail, password);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //This is executed when user clicks any button of the phone system. If the button was "back", finish the app
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            this.finishAffinity();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     //Query for logging in with credentials introduced by user

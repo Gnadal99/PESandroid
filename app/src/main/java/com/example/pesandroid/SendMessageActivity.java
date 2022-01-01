@@ -78,6 +78,13 @@ public class SendMessageActivity extends AppCompatActivity {
                     //Obtain data
                     String title = titleIn.getText().toString();
                     String body = bodyIn.getText().toString();
+
+                    //Cast end of line characters from java to HTTP (\n --> %0D%0A)
+                    String[] split = body.split("\n");
+                    body = split[0];
+                    for(int i = 1; i < split.length; i++) {
+                        body = body + "%0D%0A" + split[i];
+                    }
                     System.out.println(body);
 
                     handler.post(() -> {
