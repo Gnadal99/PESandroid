@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 import com.example.pesandroid.models.Mail;
-import com.example.pesandroid.models.Message;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -174,12 +173,12 @@ public class InboxActivity extends AppCompatActivity   {
                                 JSONArray jArray = new JSONArray(result);
                                 List<Mail> mailList = new ArrayList<>();
                                 for(int i = 0; i < jArray.length(); i++) {
-                                    JSONArray json_array = jArray.getJSONArray(i);
-                                    JSONObject json_data = json_array.getJSONObject(0);
-                                    Message message = new Message(json_data.getString("title"), json_data.getString("body"));
-                                    String mail1 = json_array.getString(1);
-                                    String date = json_array.getString(2);
-                                    Mail email = new Mail(message, mail1, date);
+                                    JSONObject json_array = jArray.getJSONObject(i);
+                                    String title = json_array.getString("title");
+                                    String body = json_array.getString("body");
+                                    String mail1 = json_array.getString("mail");
+                                    String date = json_array.getString("date");
+                                    Mail email = new Mail(title, body, mail1, date);
                                     mailList.add(email);
                                 }
 

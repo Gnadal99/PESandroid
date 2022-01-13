@@ -2,6 +2,7 @@ package com.example.pesandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -82,7 +83,7 @@ public class UpdateActivity extends AppCompatActivity {
                         });
 
                         //Query
-                        String query = "http://10.0.2.2:9000/Android/updateAccount?mail=" + mail + "&password=" + password + "&newname=" + newName + "&newpassword=" + newPassword1;
+                        String query = "http://10.0.2.2:9000/Android/updateAccount?mail=" + mail + "&password=" + password + "&newName=" + newName + "&newPassword=" + newPassword1;
                         URL url = new URL(query);
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setReadTimeout(10000);
@@ -109,6 +110,16 @@ public class UpdateActivity extends AppCompatActivity {
                                 //Render toast with result message
                                 Toast.makeText(activity.getApplicationContext(), "Your information has been updated correctly.", Toast.LENGTH_LONG).show();
 
+                                //Delete previous password from shared preferences
+                                SharedPreferences preferences = getSharedPreferences("MySharedPref", 0);
+                                preferences.edit().remove("password").apply();
+
+                                //Save new password
+                                SharedPreferences sharedPreferences = activity.getSharedPreferences("MySharedPref", 0);
+                                SharedPreferences.Editor myEdit = sharedPreferences.edit();
+                                myEdit.putString("password", password);
+                                myEdit.apply();
+
                                 //Return to inbox activity
                                 finish();
 
@@ -131,7 +142,7 @@ public class UpdateActivity extends AppCompatActivity {
                         else if (result.equals("-1")) {
                             handler.post(() -> {
                                 //Render toast with error message
-                                Toast.makeText(activity.getApplicationContext(), "Wrong credentials. Make sure the data has been introduced properly.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(activity.getApplicationContext(), "Wrong password. Try again", Toast.LENGTH_LONG).show();
 
                                 //Change visibilities. Progress bar must not be seen
                                 title.setVisibility(View.VISIBLE);

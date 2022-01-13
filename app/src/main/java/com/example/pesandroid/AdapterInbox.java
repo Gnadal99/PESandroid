@@ -74,8 +74,8 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
         //Replace the contents of the view with that element
         holder.mailOut.setText(m.mail);
         holder.dateOut.setText(m.date);
-        holder.titleOut.setText(m.message.title);
-        holder.bodyOut.setText(m.message.body);
+        holder.titleOut.setText(m.title);
+        holder.bodyOut.setText(m.body);
 
         //The code inside will be executed when clicking the mail of any message in recyclerView
         holder.mailOut.setOnClickListener(v -> {
@@ -84,9 +84,9 @@ public class AdapterInbox extends RecyclerView.Adapter<AdapterInbox.ViewHolder> 
             intent.putExtra("inbox", activity.inboxSelectSpinner.getSelectedItem().toString());
             intent.putExtra("receiver", receiver);
             intent.putExtra("sender", values.get(holder.getAdapterPosition()).mail);
-            intent.putExtra("title", values.get(holder.getAdapterPosition()).message.title);
+            intent.putExtra("title", values.get(holder.getAdapterPosition()).title);
             intent.putExtra("date", values.get(holder.getAdapterPosition()).date);
-            intent.putExtra("body", values.get(holder.getAdapterPosition()).message.body);
+            intent.putExtra("body", values.get(holder.getAdapterPosition()).body);
 
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             activity.startActivity(intent);

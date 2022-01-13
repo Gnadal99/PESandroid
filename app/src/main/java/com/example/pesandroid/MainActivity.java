@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         //If answer is 0, credentials are right
                         case "0":
                             handler.post(() -> {
-                                //Save shared preferences (AÑADIR OPCION PARA PREGUNTAR)
+                                //Save shared preferences
                                 SharedPreferences sharedPreferences = activity.getSharedPreferences("MySharedPref", 0);
                                 SharedPreferences.Editor myEdit = sharedPreferences.edit();
                                 myEdit.putString("mail", mail);
@@ -282,28 +282,10 @@ public class MainActivity extends AppCompatActivity {
                                 pgBar.setVisibility(View.INVISIBLE);
                             });
                             break;
-                        //If answer is -1, the mail introduced does not exist
+                        //If answer is -1 or -2, credentials are wrong
                         case "-1":
-                            handler.post(() -> {
-                                //Render toast with error message
-                                Toast.makeText(activity.getApplicationContext(), "Mail address does not exist. Try again.", Toast.LENGTH_LONG).show();
-
-                                //Change visibilities. Progress bar must not be seen
-                                title.setVisibility(View.VISIBLE);
-                                image.setVisibility(View.VISIBLE);
-                                mailBox.setVisibility(View.VISIBLE);
-                                passBox.setVisibility(View.VISIBLE);
-                                button.setVisibility(View.VISIBLE);
-                                text.setVisibility(View.VISIBLE);
-                                text2.setVisibility(View.VISIBLE);
-                                pgBar.setVisibility(View.INVISIBLE);
-                            });
-                            break;
-                        //If answer is -2, the password introduced is wrong
                         case "-2":
                             handler.post(() -> {
-                                //Render toast with error message
-                                Toast.makeText(activity.getApplicationContext(), "Wrong password. Try again.", Toast.LENGTH_LONG).show();
 
                                 //Change visibilities. Progress bar must not be seen
                                 title.setVisibility(View.VISIBLE);

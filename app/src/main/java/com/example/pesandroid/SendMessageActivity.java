@@ -61,6 +61,7 @@ public class SendMessageActivity extends AppCompatActivity {
         TextView titleText = findViewById(R.id.sendMessageTitleBox);
         EditText titleIn = findViewById(R.id.sendMessageTitleIn);
         EditText mailIn = findViewById(R.id.sendMessageMailIn);
+        TextView warnText = findViewById(R.id.sendMessageWarningText);
         EditText bodyIn = findViewById(R.id.sendMessageBodyIn);
         Button sendBtn = findViewById(R.id.sendMessageSendBtn);
         Button discardBtn = findViewById(R.id.sendMessageDiscardBtn);
@@ -77,21 +78,21 @@ public class SendMessageActivity extends AppCompatActivity {
                 try {
                     //Obtain data
                     String title = titleIn.getText().toString();
-                    String body = bodyIn.getText().toString();
+                    StringBuilder body = new StringBuilder(bodyIn.getText().toString());
 
                     //Cast end of line characters from java to HTTP (\n --> %0D%0A)
-                    String[] split = body.split("\n");
-                    body = split[0];
+                    String[] split = body.toString().split("\n");
+                    body = new StringBuilder(split[0]);
                     for(int i = 1; i < split.length; i++) {
-                        body = body + "%0D%0A" + split[i];
+                        body.append("%0D%0A").append(split[i]);
                     }
-                    System.out.println(body);
 
                     handler.post(() -> {
                         //Change visibilities. Only progress bar must be seen
                         titleText.setVisibility(View.INVISIBLE);
                         titleIn.setVisibility(View.INVISIBLE);
                         mailIn.setVisibility(View.INVISIBLE);
+                        warnText.setVisibility(View.INVISIBLE);
                         bodyIn.setVisibility(View.INVISIBLE);
                         sendBtn.setVisibility(View.INVISIBLE);
                         discardBtn.setVisibility(View.INVISIBLE);
@@ -137,6 +138,7 @@ public class SendMessageActivity extends AppCompatActivity {
                                 titleText.setVisibility(View.VISIBLE);
                                 titleIn.setVisibility(View.VISIBLE);
                                 mailIn.setVisibility(View.VISIBLE);
+                                warnText.setVisibility(View.VISIBLE);
                                 bodyIn.setVisibility(View.VISIBLE);
                                 sendBtn.setVisibility(View.VISIBLE);
                                 discardBtn.setVisibility(View.VISIBLE);
@@ -152,6 +154,7 @@ public class SendMessageActivity extends AppCompatActivity {
                                 titleText.setVisibility(View.VISIBLE);
                                 titleIn.setVisibility(View.VISIBLE);
                                 mailIn.setVisibility(View.VISIBLE);
+                                warnText.setVisibility(View.VISIBLE);
                                 bodyIn.setVisibility(View.VISIBLE);
                                 sendBtn.setVisibility(View.VISIBLE);
                                 discardBtn.setVisibility(View.VISIBLE);
